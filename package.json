@@ -1,0 +1,24 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "Cantus's custom Discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jared-Powell-WKU/Discord-Bot.git"
+  },
+  "author": "Jared Powell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jared-Powell-WKU/Discord-Bot/issues"
+  },
+  "homepage": "https://github.com/Jared-Powell-WKU/Discord-Bot#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "graphql-request": "^5.1.0"
+  }
+}
