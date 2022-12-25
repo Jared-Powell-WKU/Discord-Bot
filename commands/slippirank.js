@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const {request, gql} = require('graphql-request')
+const {request} = require('graphql-request')
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('rank')
