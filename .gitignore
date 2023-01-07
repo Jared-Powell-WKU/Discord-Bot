@@ -1,1 +1,6 @@
-.env
+src/.env
+package-lock.json
+node_modules/
+build/
+.vscode/
+src/node_modules/

@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const {Collection, Client, Events, GatewayIntentBits} = Discord;
-const client = new Client({intents:[GatewayIntentBits.Guilds]});
+const client = new Client({intents:[GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
 
 // Begin setting client commands
 client.commands = new Collection();
@@ -39,5 +39,20 @@ client.on(Events.InteractionCreate, async interaction => {
     } catch (error) {
         console.error(error);
         await interaction.reply({content:"There was an error while executing this command!", ephemeral:true})
+    }
+})
+
+client.on("messageCreate", message=>{
+    try {
+        let regex = new RegExp(/(?:^|http)(?:s)?(?:\:\/\/)?(?:www\.)?twitter\.com/, "i");
+        if(regex.test(message.content) && message.embeds.length > 0) {
+            const {channelId, guildId, content} = message;
+            let fxt = content.replace(/twitter.com/, "fxtwitter.com")
+            client.channels.cache.get(channelId).send(fxt);
+            message.delete();      
+        }
+    } catch(e) {
+        console.error(e);
+        return;
     }
 })
