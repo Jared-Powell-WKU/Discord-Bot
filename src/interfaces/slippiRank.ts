@@ -3,6 +3,7 @@ import {slippiRankUrl} from '../assets/config.json'
 const {request} = require('graphql-request')
 export interface SlippiRank {
     connectCode: string;
+    displayName: string;
     title: string;
     elo: number;
     wins: number;
@@ -56,9 +57,10 @@ export async function getSlippiRankFromConnectCode(
     }`;
     let res = await request(slippiRankUrl, query, {cc:connectCode});
     let user = res.getConnectCode.user;
-    let title = getTitle(user.rankedNetplayProfile);
+    let title = getTitleFromSlpResponse(user.rankedNetplayProfile);
     return {
         connectCode:connectCode,
+        displayName:user.displayName,
         title:title,
         elo:user.rankedNetplayProfile.ratingOrdinal,
         wins:user.rankedNetplayProfile.wins ?? 0,
@@ -66,71 +68,26 @@ export async function getSlippiRankFromConnectCode(
     }
 }
 
-function getTitle(netplayProfile) {
+function getTitleFromSlpResponse(netplayProfile) {
     if(netplayProfile.ratingUpdateCount < 5) return "Unranked";
     let title:string;
     let rank:number = netplayProfile.ratingOrdinal;
     if(rank >= 2350) return "Master 3";
     if(rank >= 2275) return "Master 2";
     if(rank >= 2191.75) return "Master 1";
-    // change to ifs
-        switch(true) {
-            case rank >= 2350:
-                title = "Master 3"
-                break;
-            case rank >= 2275:
-                title = "Master 2"
-                break;
-            case rank >= 2191.75:
-                title = "Master 1"
-                break;
-            case rank >= 2136.28:
-                title = "Diamond 3"
-                break;
-            case rank >= 2073.67:
-                title = "Diamond 2"
-                break;
-            case rank >= 2003.92:
-                title = "Diamond 1"
-                break;
-            case rank >= 1927.03:
-                title = "Platinum 3"
-                break;
-            case rank >= 1843:
-                title = "Platinum 2"
-                break;
-            case rank >= 1751.83:
-                title = "Platinum 1"
-                break;
-            case rank >= 1653.52:
-                title = "Gold 3"
-                break;
-            case rank >= 1548.07:
-                title = "Gold 2"
-                break;
-            case rank >= 1435.48:
-                title = "Gold 1"
-                break;
-            case rank >= 1315.75:
-                title = "Silver 3"
-                break;
-            case rank >= 1188.88:
-                title = "Silver 2"
-                break;
-            case rank >= 1054.87:
-                title = "Literally anything but Silver 1"
-                break;
-            case rank >= 913.72:
-                title = "Bronze 3"
-                break;
-            case rank >= 765.43:
-                title = "Bronze 2"
-                break;
-            case rank > 0:
-                title = "Bronze 1"
-                break;
-            default:
-                title = "Unranked"
-        }
-        return title;
+    if(rank >= 2136.28) return  "Diamond 3";
+    if(rank >= 2073.67) return "Diamond 2";
+    if(rank >= 2003.92) return "Diamond 1";
+    if(rank >= 1927.03) return "Platinum 3";
+    if(rank >= 1843) return "Platinum 2";
+    if(rank >= 1751.83) return "Platinum 1";
+    if(rank >= 1653.52) return "Gold 3";
+    if(rank >= 1548.07) return "Gold 2";
+    if(rank >= 1435.48) return "Gold 1";
+    if(rank >= 1315.75) return "Silver 3";
+    if(rank >= 1188.88) return "Silver 2";
+    if(rank >= 1054.87) return "Silver 1";
+    if(rank >= 913.72) return "Bronze 3";
+    if(rank >= 765.43) return "Bronze 2";
+    return "Bronze 1";
 }
