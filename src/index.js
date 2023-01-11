@@ -45,10 +45,10 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on("messageCreate", message=>{
     try {
         let regex = new RegExp(/(?:^|http)(?:s)?(?:\:\/\/)?(?:www\.)?twitter\.com/, "i");
-        if(regex.test(message.content) && message.embeds.length > 0) {
+        if(regex.test(message.content) && (message.embeds.length > 0 || message.attachments.length > 0)) {
             const {channelId, guildId, content} = message;
             let fxt = content.replace(/twitter.com/, "fxtwitter.com")
-            client.channels.cache.get(channelId).send(fxt);
+            client.channels.cache.get(channelId).send(`(<@${message.member.id}>)\n${fxt}`);
             message.delete();      
         }
     } catch(e) {
