@@ -46,9 +46,9 @@ client.on("messageCreate", message=>{
     try {
         let regex = new RegExp(/(?:^|http)(?:s)?(?:\:\/\/)?(?:www\.)?twitter\.com/, "i");
         if(regex.test(message.content) && (message.embeds.length > 0 || message.attachments.length > 0)) {
-            const {channelId, guildId, content} = message;
+            const {channelId, content, member} = message;
             let fxt = content.replace(/twitter.com/, "fxtwitter.com")
-            client.channels.cache.get(channelId).send(`(${message.member})\n${fxt}`);
+            client.channels.cache.get(channelId).send(`(${member})\n${fxt}`);
             message.delete();      
         }
     } catch(e) {
