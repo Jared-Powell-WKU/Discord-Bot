@@ -3,8 +3,8 @@ const Discord = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const {Collection, Client, Events, GatewayIntentBits} = Discord;
-const client = new Client({intents:[GatewayIntentBits.Guilds]});
-
+const client = new Client({intents:[GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
+const {fxTwitterMessage} = require('./functions/twitter')
 // Begin setting client commands
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -39,5 +39,22 @@ client.on(Events.InteractionCreate, async interaction => {
     } catch (error) {
         console.error(error);
         await interaction.reply({content:"There was an error while executing this command!", ephemeral:true})
+    }
+})
+
+client.on("messageCreate", async message=>{
+    try {
+        let {content} = message;
+        let isTwitter = new RegExp(/(?:^|http)(?:s)?(?:\:\/\/)?(?:www\.)?twitter\.com/, "i");
+        if(isTwitter.test(content)) {
+            let fxt = await fxTwitterMessage(content);
+            if(!fxt) return;
+            const {channelId, member} = message;
+            client.channels.cache.get(channelId).send(`(${member})\n${fxt}`);
+            await message.delete();
+        }
+    } catch(e) {
+        console.error(e);
+        return;
     }
 })
