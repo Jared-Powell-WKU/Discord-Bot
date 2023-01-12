@@ -2,6 +2,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
+const TwitterClient = require('twitter-api-sdk').Client;
 const {Collection, Client, Events, GatewayIntentBits} = Discord;
 const client = new Client({intents:[GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
 
@@ -42,10 +43,22 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 })
 
-client.on("messageCreate", message=>{
+client.on("messageCreate", async message=>{
     try {
         let regex = new RegExp(/(?:^|http)(?:s)?(?:\:\/\/)?(?:www\.)?twitter\.com/, "i");
-        if(regex.test(message.content) && (message.embeds.length > 0 || message.attachments.length > 0)) {
+        if(regex.test(message.content)) {
+            const tweetReg = new RegExp(/(?:.*)\/status\/([0-9]+)(?:\?|$| )/, "i");
+            let id = message.content.match(tweetReg)[1] ?? false;
+            if(!id) { 
+                //debugging logic goes here
+                return;
+            }
+            const twitter = new TwitterClient(process.env.TWITTER_BEARER);
+            let tweet = await twitter.tweets.findTweetById(id, {"tweet.fields":["attachments", "entities"]});
+            if(!tweet.data?.entities?.urls[0]?.expanded_url?.includes("/video")) {
+                //debugging logic goes here
+                return;
+            }
             const {channelId, content, member} = message;
             let fxt = content.replace(/twitter.com/, "fxtwitter.com")
             client.channels.cache.get(channelId).send(`(${member})\n${fxt}`);
