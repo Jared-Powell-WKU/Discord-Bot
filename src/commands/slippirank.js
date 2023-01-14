@@ -48,17 +48,18 @@ module.exports = {
             __typename
             }
         }`;
-        const code = interaction.options.getString("code").toUpperCase();
-        const vars = {cc:code}
+        const code = interaction.options.getString("code");
+        let codeReg = new RegExp(/[a-zA-Z]+#[0-9]+/)
+        if(!codeReg.test(code)) {
+            await interaction.reply(`Code "${code}" is an invalid connect code.`);
+            return;
+        }
+
+        const vars = {cc:code.toUpperCase()}
         const url = "https://gql-gateway-dot-slippi.uc.r.appspot.com/graphql";
         try {
             let res = await request(url, query, vars);
             let user = res.getConnectCode.user;
-            let codeReg = new RegExp(/[a-zA-Z]+#[0-9]+/)
-            if(!codeReg.test(code)) {
-                await interaction.reply(`Code "${code}" is an invalid connect code.`);
-                return;
-            }
             let title = getTitleFromSlpResponse(user.rankedNetplayProfile);
             let msg = `${user.displayName}: ${Math.round(user.rankedNetplayProfile.ratingOrdinal)} (${title})\nWins: ${user.rankedNetplayProfile.wins}, Losses: ${user.rankedNetplayProfile.losses}`
             await interaction.reply(msg);
