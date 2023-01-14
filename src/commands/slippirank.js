@@ -53,6 +53,11 @@ module.exports = {
         try {
             let res = await request(url, query, vars);
             let user = res.getConnectCode.user;
+            let codeReg = new RegExp(/[a-zA-Z]+#[0-9]+/)
+            if(!codeReg.test(user)) {
+                await interaction.reply(`Code "${user}" is an invalid connect code.`);
+                return;
+            }
             let title = getTitleFromSlpResponse(user.rankedNetplayProfile);
             let msg = `${user.displayName}: ${Math.round(user.rankedNetplayProfile.ratingOrdinal)} (${title})\nWins: ${user.rankedNetplayProfile.wins}, Losses: ${user.rankedNetplayProfile.losses}`
             await interaction.reply(msg);
