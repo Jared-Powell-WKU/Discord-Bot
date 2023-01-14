@@ -61,11 +61,11 @@ module.exports = {
             let res = await request(url, query, vars);
             let user = res.getConnectCode.user;
             let title = getTitleFromSlpResponse(user.rankedNetplayProfile);
-            let msg = `${user.displayName}: ${Math.round(user.rankedNetplayProfile.ratingOrdinal)} (${title})\nWins: ${user.rankedNetplayProfile.wins}, Losses: ${user.rankedNetplayProfile.losses}`
+            let msg = `${user.displayName}: ${Math.round(user.rankedNetplayProfile.ratingOrdinal)} (${title})\nWins: ${user.rankedNetplayProfile.wins || "0"}, Losses: ${user.rankedNetplayProfile.losses || "0"}`
             await interaction.reply(msg);
         } catch(e) {
             console.error("Error communicating with Slippi servers", e);
-            interaction.reply("There was a problem communicating with Slippi servers. Thanks Fizzi.");
+            interaction.reply("There was a problem communicating with Slippi servers. Ensure that you've typed the user's code correctly.");
         }
     }
 }
