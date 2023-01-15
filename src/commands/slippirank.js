@@ -59,7 +59,11 @@ module.exports = {
         const url = "https://gql-gateway-dot-slippi.uc.r.appspot.com/graphql";
         try {
             let res = await request(url, query, vars);
-            let user = res.getConnectCode.user;
+            let user = res.getConnectCode?.user;
+            if(!user) {
+                interaction.reply(`There was not a user found with code ${code}.`);
+                return;
+            }
             let title = getTitleFromSlpResponse(user.rankedNetplayProfile);
             let msg = `${user.displayName}: ${Math.round(user.rankedNetplayProfile.ratingOrdinal)} (${title})\nWins: ${user.rankedNetplayProfile.wins || "0"}, Losses: ${user.rankedNetplayProfile.losses || "0"}`
             await interaction.reply(msg);
