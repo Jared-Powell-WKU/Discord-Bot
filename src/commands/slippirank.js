@@ -7,45 +7,21 @@ module.exports = {
         .addStringOption(option=>option.setName('code').setDescription("Slippi Code").setRequired(true)),
     async execute(interaction) {
         const query = `fragment userProfilePage on User {
-            fbUid
-            email
             displayName
-            connectCode {
-                code
-                    __typename
-                }
-            status
-            activeSubscription {
-                level
-                hasGiftSub
-                __typename
-                }
             rankedNetplayProfile {
-                id
                 ratingOrdinal
                 ratingUpdateCount
                 wins
                 losses
                 dailyGlobalPlacement
                 dailyRegionalPlacement
-                continent
-                characters {
-                    id
-                    character
-                    gameCount
-                    __typename
-                    }
-                __typename
                 }
-                __typename
         }
         query AccountManagementPageQuery($cc: String!) {
             getConnectCode(code: $cc) {
                 user {
                     ...userProfilePage
-                    __typename
                     }
-            __typename
             }
         }`;
         const code = interaction.options.getString("code");
