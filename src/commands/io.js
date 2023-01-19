@@ -13,7 +13,7 @@ const commands = {
                 var tmpObj = JSON.parse(fs.readFileSync(tempPath).toString())
                 tmpObj.bracket = interaction.options.getString("link");
                 fs.writeFileSync(tempPath, JSON.stringify(tmpObj));
-                await interaction.reply("Bracket updated");
+                await interaction.reply(tmpObj.bracket);
             }
     },
     bracket: {
