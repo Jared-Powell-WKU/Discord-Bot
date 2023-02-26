@@ -7,7 +7,7 @@ async function fxTwitterMessage(content) {
     if(!id) return false;
     let isVideo = await isTwitterVideo(id);
     if(!isVideo) return false;
-    return content.replace(/twitter.com/, "fxtwitter.com")
+    return content.replaceAll(/twitter.com/, "fxtwitter.com")
 }
 
 async function isTwitterVideo(tweetId) {

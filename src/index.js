@@ -50,12 +50,12 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.on("messageCreate", async message=>{
     try {
-        let {content} = message;
+        const {content, channelId, member} = message;
+        if(member.user.bot) return;
         let isTwitter = new RegExp(/(?:^|http)(?:s)?(?:\:\/\/)?(?:www\.)?twitter\.com/, "i");
         if(isTwitter.test(content)) {
             let fxt = await fxTwitterMessage(content);
             if(!fxt) return;
-            const {channelId, member} = message;
             client.channels.cache.get(channelId).send(`(${member})\n${fxt}`);
             await message.delete();
         }
